@@ -13,13 +13,17 @@ class node {
     vector<vector<int>> state;
  public:
     node(vector<vector<int>> s) : state(s) {};
-    int get_fn() {return fn;}
-    int get_gn() {return gn;}
-    int get_hn() {return hn;}
+    int get_fn() const {return fn;}
+    int get_gn() const {return gn;}
+    int get_hn() const {return hn;}
     void set_fn(int f) {fn = f;}
     void set_gn(int g) {gn = g;}
     void set_hn(int h) {hn = h;}
 };
+
+bool operator<(const node& lhs, const node& rhs) {
+    return lhs.get_fn() < rhs.get_fn();
+}
 
 void general_search(vector<vector<int>>& puzzle, int heuristic) {
     priority_queue<node> nodes;
@@ -48,7 +52,8 @@ int main() {
     cin >> choice;
 
     int eight_puzzle_size = 3;
-    vector<vector<int>> puzzle(eight_puzzle_size, vector<int>(eight_puzzle_size));
+    int puzzle_size = eight_puzzle_size;
+    vector<vector<int>> puzzle(puzzle_size, vector<int>(puzzle_size));
 
     if (choice == 1) {
         int selected_difficulty;
@@ -88,12 +93,11 @@ int main() {
     }
     else if (choice == 2) {
         cout << "Enter your puzzle, using a zero to represent the blank." << endl;
-        cout << "Enter the first row, using space between the numbers" << endl;
-        cin >> puzzle[0][0] >> puzzle[0][1] >> puzzle[0][2];
-        cout << "Enter the second row, using space between the numbers" << endl;
-        cin >> puzzle[1][0] >> puzzle[1][1] >> puzzle[1][2];
-        cout << "Enter the third row, using space between the numbers" << endl;
-        cin >> puzzle[2][0] >> puzzle[2][1] >> puzzle[2][2];
+        vector<string> row_name = {"first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "nineth", "tenth"};
+        for (int i = 0; i < puzzle_size; ++i) {
+            cout << "Enter the " << ((i < 10) ? (row_name.at(i)) : ("next")) << " row, using space between the numbers" << endl;
+            for (int j = 0; j < puzzle_size; ++j) {cin >> puzzle[i][j];}
+        }
     }
     int algorithm;
     cout << "Select algorithm. (1) for Uniform Cost Search" << endl <<
