@@ -2,25 +2,39 @@
 #include <vector>
 #include <queue>
 #include <ctime>
+#include <map>
+#include <algorithm>
 
 using namespace std;
+
+struct index {
+    int row = -1;
+    int column = -1;
+    index();
+    index(int r, int c) : row(r), column(c) {}
+};
 
 class node {
  private:
     int gn; 
     int hn; 
+    index blank;
  public:
     node(vector<vector<int>> s) : state(s) {};
     int get_fn() const {return gn + hn;} //estimated cost of the cheapest solution that goes through node n
     int get_gn() const {return gn;} //the cost to get to a node
     int get_hn() const {return hn;} //the estimated distance to the goal
+    index get_blank() const {return blank;}
     void set_gn(int g) {gn = g;}
     void set_hn(int h) {hn = h;}
-    bool operator<(const node& rhs) {
-        return this->get_fn() < rhs.get_fn();
-    }
+    void set_blank(int r, int c) {blank = {r, c};}
+    string to_string() {string n; for (const auto& row : state) for (const auto& elem : row) n.push_back(elem + 0x30); return n;}
     vector<vector<int>> state;
 };
+
+bool operator<(const node& lhs, const node& rhs) {
+    return lhs.get_fn() < rhs.get_fn();
+}
 
 bool is_goal_state(const node& initial_state, const node& curr_state) {
     for (unsigned i = 0; i < initial_state.state.size(); ++i) {
@@ -33,14 +47,36 @@ bool is_goal_state(const node& initial_state, const node& curr_state) {
     return true;
 }
 
+void expand(node& curr_state, priority_queue<node>& nodes, map<string, bool>& explored_states, int heuristic) {
+    int row = curr_state.get_blank().row;
+    int column = curr_state.get_blank().column;
+    if (curr_state.get_blank().row != 0) {//up
+        node new_state(curr_state.state);
+        new_state.state[row][column] = new_state.state[row - 1][column];
+        new_state.state[row - 1][column] = '0';
+        new_state.set_blank(row - 1, column);
+        //set the cost;
+        nodes.push(new_state);
+    }
+}
+
 node& general_search(vector<vector<int>>& puzzle, int heuristic) {
     priority_queue<node> nodes;
     node initial_state(puzzle);
     initial_state.set_gn(0);
     initial_state.set_hn(0);
+    for (int i = 0; i < puzzle.size(); ++i) {
+        for (int j = 0; j < puzzle.size(); ++j) {
+            if (puzzle[i][j] == '0') {
+                initial_state.set_blank(i, j);
+                break;
+            }
+        }
+    }
     nodes.push(initial_state);
     unsigned max_queue_size = 1;
     unsigned nodes_expanded = 0;
+    map<string, bool> explored_states;
     while(true) {
         if (nodes.empty()) {
             cout << "Error: No solution found!" << endl;
@@ -59,6 +95,7 @@ node& general_search(vector<vector<int>>& puzzle, int heuristic) {
             return curr_state;
         }
         //nodes = QUEUEING-FUNCTION(nodes, EXPAND(node, problem.OPERATORS))
+        expand(curr_state, nodes, explored_states, heuristic);
         ++nodes_expanded;
     }
 }
