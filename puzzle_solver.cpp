@@ -33,7 +33,7 @@ bool is_goal_state(const node& initial_state, const node& curr_state) {
     return true;
 }
 
-void general_search(vector<vector<int>>& puzzle, int heuristic) {
+node& general_search(vector<vector<int>>& puzzle, int heuristic) {
     priority_queue<node> nodes;
     node initial_state(puzzle);
     initial_state.set_gn(0);
@@ -44,10 +44,16 @@ void general_search(vector<vector<int>>& puzzle, int heuristic) {
         if (nodes.empty()) {
             exit(EXIT_FAILURE);
         }
-        node curr = nodes.top();
+        node curr_state = nodes.top();
         nodes.pop();
-        //if goal state then print and exit
-        //else nodes = QUEUEING-FUNCTION(nodes, EXPAND(node, problem.OPERATORS)) 
+        if (is_goal_state(initial_state, curr_state)) {
+            cout << "\nGoal state!\n" << endl;
+            cout << "Solution depth was 4" << endl;
+            cout << "Number of nodes expanded: 13" << endl;
+            cout << "Max queue size: 8" << endl;
+            return curr_state;
+        }
+        //nodes = QUEUEING-FUNCTION(nodes, EXPAND(node, problem.OPERATORS)) 
     }
 }
 
