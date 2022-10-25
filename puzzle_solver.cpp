@@ -39,21 +39,27 @@ node& general_search(vector<vector<int>>& puzzle, int heuristic) {
     initial_state.set_gn(0);
     initial_state.set_hn(0);
     nodes.push(initial_state);
-
+    unsigned max_queue_size = 1;
+    unsigned nodes_expanded = 0;
     while(true) {
         if (nodes.empty()) {
-            exit(EXIT_FAILURE);
+            cout << "Error: No solution found!" << endl;
+            return initial_state;
+        }
+        if (nodes.size() > max_queue_size) {
+            max_queue_size = nodes.size();
         }
         node curr_state = nodes.top();
         nodes.pop();
         if (is_goal_state(initial_state, curr_state)) {
             cout << "\nGoal state!\n" << endl;
-            cout << "Solution depth was 4" << endl;
-            cout << "Number of nodes expanded: 13" << endl;
-            cout << "Max queue size: 8" << endl;
+            cout << "Solution depth was " << curr_state.get_gn() << endl;
+            cout << "Number of nodes expanded: " << nodes_expanded << endl;
+            cout << "Max queue size: " << max_queue_size << endl;
             return curr_state;
         }
-        //nodes = QUEUEING-FUNCTION(nodes, EXPAND(node, problem.OPERATORS)) 
+        //nodes = QUEUEING-FUNCTION(nodes, EXPAND(node, problem.OPERATORS))
+        ++nodes_expanded;
     }
 }
 
