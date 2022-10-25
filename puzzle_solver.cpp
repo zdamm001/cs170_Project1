@@ -9,7 +9,6 @@ class node {
  private:
     int gn; 
     int hn; 
-    vector<vector<int>> state;
  public:
     node(vector<vector<int>> s) : state(s) {};
     int get_fn() const {return gn + hn;} //estimated cost of the cheapest solution that goes through node n
@@ -20,7 +19,19 @@ class node {
     bool operator<(const node& rhs) {
         return this->get_fn() < rhs.get_fn();
     }
+    vector<vector<int>> state;
 };
+
+bool is_goal_state(const node& initial_state, const node& curr_state) {
+    for (unsigned i = 0; i < initial_state.state.size(); ++i) {
+        for (unsigned j = 0; j < initial_state.state.size(); ++j) {
+            if (initial_state.state[i][j] != curr_state.state[i][j]) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
 
 void general_search(vector<vector<int>>& puzzle, int heuristic) {
     priority_queue<node> nodes;
