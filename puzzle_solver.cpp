@@ -1,10 +1,43 @@
 #include <iostream>
 #include <vector>
+#include <queue>
+#include <ctime>
 
 using namespace std;
 
-void general_search() {
+class node {
+ private:
+    int fn;
+    int gn;
+    int hn;
+    vector<vector<int>> state;
+ public:
+    node(vector<vector<int>> s) : state(s) {};
+    int get_fn() {return fn;}
+    int get_gn() {return gn;}
+    int get_hn() {return hn;}
+    void set_fn(int f) {fn = f;}
+    void set_gn(int g) {gn = g;}
+    void set_hn(int h) {hn = h;}
+};
 
+void general_search(vector<vector<int>>& puzzle, int heuristic) {
+    priority_queue<node> nodes;
+    node initial_state(puzzle);
+    initial_state.set_gn(0);
+    initial_state.set_hn(0);
+    initial_state.set_fn(0);
+    nodes.push(initial_state);
+
+    while(true) {
+        if (nodes.empty()) {
+            exit(EXIT_FAILURE);
+        }
+        node curr = nodes.top();
+        nodes.pop();
+        //if goal state then print and exit
+        //else nodes = QUEUEING-FUNCTION(nodes, EXPAND(node, problem.OPERATORS)) 
+    }
 }
 
 int main() {
@@ -62,16 +95,14 @@ int main() {
         cout << "Enter the third row, using space between the numbers" << endl;
         cin >> puzzle[2][0] >> puzzle[2][1] >> puzzle[2][2];
     }
+    int algorithm;
+    cout << "Select algorithm. (1) for Uniform Cost Search" << endl <<
+            "(2) for the Misplaced Tile Heuristic, or" << endl <<
+            "(3) the Manhattan Distance Heuristic." << endl;
+    cin >> algorithm;
+    time_t start = clock();
+    general_search(puzzle, algorithm);
+    time_t end = clock();
+    cout << "Total time: " << (end - start) / CLOCKS_PER_SEC << " seconds." << endl;
     return 0;
 }
-
-/*
-function general-search(problem, QUEUEING-FUNCTION) 
-nodes = MAKE-QUEUE(MAKE-NODE(problem.INITIAL-STATE)) 
-loop do
-if EMPTY(nodes) then return "failure" 
- node = REMOVE-FRONT(nodes) 
-if problem.GOAL-TEST(node.STATE) succeeds then return node
- nodes = QUEUEING-FUNCTION(nodes, EXPAND(node, problem.OPERATORS)) 
-end
-*/
