@@ -7,30 +7,26 @@ using namespace std;
 
 class node {
  private:
-    int fn;
-    int gn;
-    int hn;
+    int gn; 
+    int hn; 
     vector<vector<int>> state;
  public:
     node(vector<vector<int>> s) : state(s) {};
-    int get_fn() const {return fn;}
-    int get_gn() const {return gn;}
-    int get_hn() const {return hn;}
-    void set_fn(int f) {fn = f;}
+    int get_fn() const {return gn + hn;} //estimated cost of the cheapest solution that goes through node n
+    int get_gn() const {return gn;} //the cost to get to a node
+    int get_hn() const {return hn;} //the estimated distance to the goal
     void set_gn(int g) {gn = g;}
     void set_hn(int h) {hn = h;}
+    bool operator<(const node& rhs) {
+        return this->get_fn() < rhs.get_fn();
+    }
 };
-
-bool operator<(const node& lhs, const node& rhs) {
-    return lhs.get_fn() < rhs.get_fn();
-}
 
 void general_search(vector<vector<int>>& puzzle, int heuristic) {
     priority_queue<node> nodes;
     node initial_state(puzzle);
     initial_state.set_gn(0);
     initial_state.set_hn(0);
-    initial_state.set_fn(0);
     nodes.push(initial_state);
 
     while(true) {
