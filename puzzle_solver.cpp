@@ -34,7 +34,7 @@ class node {
 };
 
 bool operator<(const node& lhs, const node& rhs) {
-    return !(lhs.get_fn() < rhs.get_fn());
+    return lhs.get_fn() > rhs.get_fn();
 }
 
 bool is_goal_state(const node& state) {
@@ -109,7 +109,6 @@ int manhattan_distance(node& curr_node) {
     for (int i = 0; i < curr_node.state.size(); ++i) {
         for (int j = 0; j < curr_node.state.size(); ++j) {
             if (curr_node.state[i][j]) {
-                
                 total_manhattan += abs((int)(i - ((curr_node.state[i][j] - 1) / curr_node.state.size())));
                 total_manhattan += abs((int)(j - ((curr_node.state[i][j] - 1) % curr_node.state.size())));
             }
@@ -223,20 +222,21 @@ int main() {
                 difficulty = "error";
                 break;
         }
-        cout << "Difficult of \'" << difficulty << "\' selected." << endl;
+        cout << "Difficulty of \'" << difficulty << "\' selected." << endl;
     }
     else if (choice == 2) {
         cout << "Enter your puzzle, using a zero to represent the blank." << endl;
         vector<string> row_name = {"first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "nineth", "tenth"};
         for (int i = 0; i < puzzle_size; ++i) {
-            cout << "Enter the " << ((i < 10) ? (row_name.at(i)) : ("next")) << " row, using space between the numbers" << endl;
+            cout << "Enter the " << ((i < row_name.size()) ? (row_name.at(i)) : ("next")) << " row, using space between the numbers" << endl;
             for (int j = 0; j < puzzle_size; ++j) {cin >> puzzle[i][j];}
         }
     }
     int algorithm;
-    cout << "Select algorithm. (1) for Uniform Cost Search" << endl <<
-            "(2) for the Misplaced Tile Heuristic, or" << endl <<
-            "(3) the Manhattan Distance Heuristic." << endl;
+    cout << "Select an algorithm: " << endl <<
+            "(1) for Uniform Cost Search" << endl <<
+            "(2) for the Misplaced Tile Heuristic" << endl <<
+            "(3) for the Manhattan Distance Heuristic" << endl;
     cin >> algorithm;
     time_t start = clock();
     general_search(puzzle, algorithm);
