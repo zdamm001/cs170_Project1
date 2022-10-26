@@ -64,8 +64,14 @@ vector<node> expand(node& curr_state, priority_queue<node>& nodes, map<string, b
     return new_nodes;
 }
 
-int misplaced_tile(node& state) {
-
+int misplaced_tile(node& curr_node) {
+    int num_misplaced = 0;
+    for (int i = 0; i < curr_node.state.size(); ++i) {
+        for (int j = 0; j < curr_node.state.size(); ++j) {
+            num_misplaced += curr_node.state[i][j] != i * curr_node.state.size() + j;
+        }
+    }
+    return num_misplaced - 1;
 }
 
 int manhattan_distance(node& state) {
@@ -108,6 +114,8 @@ node& general_search(vector<vector<int>>& puzzle, int heuristic) {
     while(true) {
         if (nodes.empty()) {
             cout << "Error: No solution found!" << endl;
+            cout << "Number of nodes expanded: " << nodes_expanded << endl;
+            cout << "Max queue size: " << max_queue_size << endl;
             return initial_state;
         }
         if (nodes.size() > max_queue_size) {
