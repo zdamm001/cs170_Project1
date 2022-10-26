@@ -40,7 +40,7 @@ bool operator<(const node& lhs, const node& rhs) {
 bool is_goal_state(const node& state) {
     for (unsigned i = 0; i < state.state.size(); ++i) {
         for (unsigned j = 0; j < state.state.size(); ++j) {
-            if (state.state[i][j] != i * state.state.size() + j) {
+            if (state.state[i][j] != i * state.state.size() + j + 1) {
                 if (state.state[i][j]) {
                     return false;
                 }
@@ -98,7 +98,7 @@ int misplaced_tile(node& curr_node) {
     int num_misplaced = 0;
     for (int i = 0; i < curr_node.state.size(); ++i) {
         for (int j = 0; j < curr_node.state.size(); ++j) {
-            num_misplaced += curr_node.state[i][j] != i * curr_node.state.size() + j;
+            num_misplaced += curr_node.state[i][j] != (i * curr_node.state.size() + j + 1);
         }
     }
     return num_misplaced - 1;
@@ -169,7 +169,7 @@ void general_search(vector<vector<int>>& puzzle, int heuristic) {
             cout << "Max queue size: " << max_queue_size << endl;
             return;
         }
-        cout << "The best state to expand with a g(n) = " << curr_state.get_gn() << " and h(n) = " << curr_state.get_hn() << " is…" << endl;
+        cout << "The best state to expand with a g(n) = " << curr_state.get_gn() << " and h(n) = " << curr_state.get_hn() << " is..." << endl;
         curr_state.print();
         vector<node> new_nodes = expand(curr_state, nodes, explored_states);
         a_star_search(nodes, new_nodes, heuristic);
