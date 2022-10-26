@@ -60,7 +60,7 @@ vector<node> expand(node& curr_state, priority_queue<node>& nodes, map<string, b
         new_state_up.state[row][column] = new_state_up.state[row - 1][column];
         new_state_up.state[row - 1][column] = '0';
         new_state_up.set_blank(row - 1, column);
-        if (explored_states[curr_state.to_string()] == false) {
+        if (explored_states[new_state_up.to_string()] == false) {
             new_nodes.push_back(new_state_up);
         }
     }
@@ -69,7 +69,7 @@ vector<node> expand(node& curr_state, priority_queue<node>& nodes, map<string, b
         new_state_down.state[row][column] = new_state_down.state[row + 1][column];
         new_state_down.state[row + 1][column] = '0';
         new_state_down.set_blank(row + 1, column);
-        if (explored_states[curr_state.to_string()] == false) {
+        if (explored_states[new_state_down.to_string()] == false) {
             new_nodes.push_back(new_state_down);
         }
     }
@@ -78,7 +78,7 @@ vector<node> expand(node& curr_state, priority_queue<node>& nodes, map<string, b
         new_state_left.state[row][column] = new_state_left.state[row][column - 1];
         new_state_left.state[row][column - 1] = '0';
         new_state_left.set_blank(row, column - 1);
-        if (explored_states[curr_state.to_string()] == false) {
+        if (explored_states[new_state_left.to_string()] == false) {
             new_nodes.push_back(new_state_left);
         }
     }
@@ -87,7 +87,7 @@ vector<node> expand(node& curr_state, priority_queue<node>& nodes, map<string, b
         new_state_right.state[row][column] = new_state_right.state[row][column + 1];
         new_state_right.state[row][column + 1] = '0';
         new_state_right.set_blank(row, column + 1);
-        if (explored_states[curr_state.to_string()] == false) {
+        if (explored_states[new_state_right.to_string()] == false) {
             new_nodes.push_back(new_state_right);
         }
     }
