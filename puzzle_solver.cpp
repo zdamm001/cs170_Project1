@@ -109,8 +109,9 @@ int manhattan_distance(node& curr_node) {
     for (int i = 0; i < curr_node.state.size(); ++i) {
         for (int j = 0; j < curr_node.state.size(); ++j) {
             if (curr_node.state[i][j]) {
-                total_manhattan += i - ((curr_node.state[i][j] - 1) / curr_node.state.size());
-                total_manhattan += j - ((curr_node.state[i][j] - 1) % curr_node.state.size());
+                
+                total_manhattan += abs((int)(i - ((curr_node.state[i][j] - 1) / curr_node.state.size())));
+                total_manhattan += abs((int)(j - ((curr_node.state[i][j] - 1) % curr_node.state.size())));
             }
         }
     }
@@ -162,6 +163,8 @@ void general_search(vector<vector<int>>& puzzle, int heuristic) {
         }
         node curr_state = nodes.top();
         nodes.pop();
+        cout << "The best state to expand with a g(n) = " << curr_state.get_gn() << " and h(n) = " << curr_state.get_hn() << " is..." << endl;
+        curr_state.print();
         if (is_goal_state(curr_state)) {
             cout << "\nGoal state!\n" << endl;
             cout << "Solution depth was " << curr_state.get_gn() << endl;
@@ -169,8 +172,6 @@ void general_search(vector<vector<int>>& puzzle, int heuristic) {
             cout << "Max queue size: " << max_queue_size << endl;
             return;
         }
-        cout << "The best state to expand with a g(n) = " << curr_state.get_gn() << " and h(n) = " << curr_state.get_hn() << " is..." << endl;
-        curr_state.print();
         vector<node> new_nodes = expand(curr_state, nodes, explored_states);
         a_star_search(nodes, new_nodes, heuristic);
         ++nodes_expanded;
@@ -240,6 +241,6 @@ int main() {
     time_t start = clock();
     general_search(puzzle, algorithm);
     time_t end = clock();
-    cout << "Total time: " << (end - start) / CLOCKS_PER_SEC << " seconds." << endl;
+    cout << "Total time: " << (end - start) / (double)CLOCKS_PER_SEC << " seconds." << endl;
     return 0;
 }
