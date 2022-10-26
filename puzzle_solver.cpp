@@ -29,6 +29,7 @@ class node {
     void set_hn(int h) {hn = h;}
     void set_blank(int r, int c) {blank = {r, c};}
     string to_string() {string n; for (const auto& row : state) for (const auto& elem : row) n.push_back(elem + 0x30); return n;}
+    void print() {for (const auto& row : state) {cout << '['; for (unsigned i = 0; i < row.size() - 1; ++i) cout << row[i] << ", "; cout << row[row.size() - 1] << "]\n";}}
     vector<vector<int>> state;
 };
 
@@ -139,7 +140,7 @@ void general_search(vector<vector<int>>& puzzle, int heuristic) {
     initial_state.set_hn(0);
     for (int i = 0; i < puzzle.size(); ++i) {
         for (int j = 0; j < puzzle.size(); ++j) {
-            if (puzzle[i][j] == '0') {
+            if (puzzle[i][j] == 0) {
                 initial_state.set_blank(i, j);
                 break;
             }
@@ -168,6 +169,8 @@ void general_search(vector<vector<int>>& puzzle, int heuristic) {
             cout << "Max queue size: " << max_queue_size << endl;
             return;
         }
+        cout << "The best state to expand with a g(n) = " << curr_state.get_gn() << " and h(n) = " << curr_state.get_hn() << " is…" << endl;
+        curr_state.print();
         vector<node> new_nodes = expand(curr_state, nodes, explored_states);
         a_star_search(nodes, new_nodes, heuristic);
         ++nodes_expanded;
