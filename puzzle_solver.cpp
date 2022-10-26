@@ -14,6 +14,7 @@ struct index {
     index(int r, int c) : row(r), column(c) {}
 };
 
+// node represents a state of the puzzle
 class node {
  private:
     int gn; 
@@ -33,15 +34,17 @@ class node {
     vector<vector<int>> state;
 };
 
+// a larger f(n) is worse
 bool operator<(const node& lhs, const node& rhs) {
     return lhs.get_fn() > rhs.get_fn();
 }
 
+// compares a puzzle state with the goal state
 bool is_goal_state(const node& state) {
     for (unsigned i = 0; i < state.state.size(); ++i) {
         for (unsigned j = 0; j < state.state.size(); ++j) {
             if (state.state[i][j] != i * state.state.size() + j + 1) {
-                if (state.state[i][j]) {
+                if (state.state[i][j]) { // skip the blank tile
                     return false;
                 }
             }
@@ -50,11 +53,13 @@ bool is_goal_state(const node& state) {
     return true;
 }
 
+// creates new nodes for moving the blank up, down, left, and right if possible and not already explored
 vector<node> expand(node& curr_state, priority_queue<node>& nodes, map<string, bool>& explored_states) {
     int row = curr_state.get_blank().row;
     int column = curr_state.get_blank().column;
     vector<node> new_nodes;
     explored_states[curr_state.to_string()] = true;
+    // operator move blank up
     if (curr_state.get_blank().row != 0) {
         node new_state_up = curr_state;
         new_state_up.state[row][column] = new_state_up.state[row - 1][column];
@@ -64,6 +69,7 @@ vector<node> expand(node& curr_state, priority_queue<node>& nodes, map<string, b
             new_nodes.push_back(new_state_up);
         }
     }
+    // operator move blank down
     if (curr_state.get_blank().row != curr_state.state.size() - 1) {
         node new_state_down = curr_state;
         new_state_down.state[row][column] = new_state_down.state[row + 1][column];
@@ -73,6 +79,7 @@ vector<node> expand(node& curr_state, priority_queue<node>& nodes, map<string, b
             new_nodes.push_back(new_state_down);
         }
     }
+    // operator move blank left
     if (curr_state.get_blank().column != 0) {
         node new_state_left = curr_state;
         new_state_left.state[row][column] = new_state_left.state[row][column - 1];
@@ -82,6 +89,7 @@ vector<node> expand(node& curr_state, priority_queue<node>& nodes, map<string, b
             new_nodes.push_back(new_state_left);
         }
     }
+    // operator move blank right
     if (curr_state.get_blank().column != curr_state.state.size() - 1) {
         node new_state_right = curr_state;
         new_state_right.state[row][column] = new_state_right.state[row][column + 1];
@@ -127,7 +135,7 @@ void a_star_search(priority_queue<node>& nodes, vector<node>& new_nodes, int heu
             new_nodes[i].set_hn(manhattan_distance(new_nodes[i]));
         }
         else {
-            new_nodes[i].set_hn(0);
+            new_nodes[i].set_hn(0); // for Uniform Cost Search
         }
         nodes.push(new_nodes[i]);
     }
@@ -152,7 +160,7 @@ void general_search(vector<vector<int>>& puzzle, int heuristic) {
     map<string, bool> explored_states;
     while(true) {
         if (nodes.empty()) {
-            cout << "Error: No solution found!" << endl;
+            cout << "No solution found!" << endl;
             cout << "Number of nodes expanded: " << nodes_expanded << endl;
             cout << "Max queue size: " << max_queue_size << endl;
             return;
