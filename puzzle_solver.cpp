@@ -36,11 +36,13 @@ bool operator<(const node& lhs, const node& rhs) {
     return lhs.get_fn() < rhs.get_fn();
 }
 
-bool is_goal_state(const node& initial_state, const node& curr_state) {
-    for (unsigned i = 0; i < initial_state.state.size(); ++i) {
-        for (unsigned j = 0; j < initial_state.state.size(); ++j) {
-            if (initial_state.state[i][j] != curr_state.state[i][j]) {
-                return false;
+bool is_goal_state(const node& state) {
+    for (unsigned i = 0; i < state.state.size(); ++i) {
+        for (unsigned j = 0; j < state.state.size(); ++j) {
+            if (state.state[i][j] != i * state.state.size() + j) {
+                if (state.state[i][j]) {
+                    return false;
+                }
             }
         }
     }
@@ -159,7 +161,7 @@ void general_search(vector<vector<int>>& puzzle, int heuristic) {
         }
         node curr_state = nodes.top();
         nodes.pop();
-        if (is_goal_state(initial_state, curr_state)) {
+        if (is_goal_state(curr_state)) {
             cout << "\nGoal state!\n" << endl;
             cout << "Solution depth was " << curr_state.get_gn() << endl;
             cout << "Number of nodes expanded: " << nodes_expanded << endl;
