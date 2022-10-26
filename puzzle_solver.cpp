@@ -47,16 +47,44 @@ bool is_goal_state(const node& initial_state, const node& curr_state) {
     return true;
 }
 
-void expand(node& curr_state, priority_queue<node>& nodes, map<string, bool>& explored_states, int heuristic) {
+vector<node> expand(node& curr_state, priority_queue<node>& nodes, map<string, bool>& explored_states) {
     int row = curr_state.get_blank().row;
     int column = curr_state.get_blank().column;
+    vector<node> new_nodes;
+    explored_states[curr_state.to_string()] = true;
     if (curr_state.get_blank().row != 0) {//up
-        node new_state(curr_state.state);
-        new_state.state[row][column] = new_state.state[row - 1][column];
-        new_state.state[row - 1][column] = '0';
-        new_state.set_blank(row - 1, column);
-        //set the cost;
-        nodes.push(new_state);
+        node new_state_up(curr_state.state);
+        new_state_up.state[row][column] = new_state_up.state[row - 1][column];
+        new_state_up.state[row - 1][column] = '0';
+        new_state_up.set_blank(row - 1, column);
+        if (explored_states[curr_state.to_string()] = false) {
+            new_nodes.push_back(new_state_up);
+        }
+    }
+    return new_nodes;
+}
+
+int misplaced_tile(node& state) {
+
+}
+
+int manhattan_distance(node& state) {
+
+}
+
+void a_star_search(priority_queue<node>& nodes, vector<node>& new_nodes, int heuristic) {
+    for (unsigned i = 0; i < new_nodes.size(); ++i) {
+        new_nodes[i].set_gn(new_nodes[i].get_gn() + 1);
+        if (heuristic == 2) {
+            new_nodes[i].set_hn(misplaced_tile(new_nodes[i]));
+        }
+        else if (heuristic == 3) {
+            new_nodes[i].set_hn(manhattan_distance(new_nodes[i]));
+        }
+        else {
+            new_nodes[i].set_hn(0);
+        }
+        nodes.push(new_nodes[i]);
     }
 }
 
@@ -94,8 +122,8 @@ node& general_search(vector<vector<int>>& puzzle, int heuristic) {
             cout << "Max queue size: " << max_queue_size << endl;
             return curr_state;
         }
-        //nodes = QUEUEING-FUNCTION(nodes, EXPAND(node, problem.OPERATORS))
-        expand(curr_state, nodes, explored_states, heuristic);
+        vector<node> new_nodes = expand(curr_state, nodes, explored_states);
+        a_star_search(nodes, new_nodes, heuristic);
         ++nodes_expanded;
     }
 }
