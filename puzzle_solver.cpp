@@ -10,7 +10,7 @@ using namespace std;
 struct index {
     int row = -1;
     int column = -1;
-    index();
+    index() {};
     index(int r, int c) : row(r), column(c) {}
 };
 
@@ -130,7 +130,7 @@ void a_star_search(priority_queue<node>& nodes, vector<node>& new_nodes, int heu
     }
 }
 
-node& general_search(vector<vector<int>>& puzzle, int heuristic) {
+void general_search(vector<vector<int>>& puzzle, int heuristic) {
     priority_queue<node> nodes;
     node initial_state(puzzle);
     initial_state.set_gn(0);
@@ -152,7 +152,7 @@ node& general_search(vector<vector<int>>& puzzle, int heuristic) {
             cout << "Error: No solution found!" << endl;
             cout << "Number of nodes expanded: " << nodes_expanded << endl;
             cout << "Max queue size: " << max_queue_size << endl;
-            return initial_state;
+            return;
         }
         if (nodes.size() > max_queue_size) {
             max_queue_size = nodes.size();
@@ -164,7 +164,7 @@ node& general_search(vector<vector<int>>& puzzle, int heuristic) {
             cout << "Solution depth was " << curr_state.get_gn() << endl;
             cout << "Number of nodes expanded: " << nodes_expanded << endl;
             cout << "Max queue size: " << max_queue_size << endl;
-            return curr_state;
+            return;
         }
         vector<node> new_nodes = expand(curr_state, nodes, explored_states);
         a_star_search(nodes, new_nodes, heuristic);
