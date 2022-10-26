@@ -74,8 +74,17 @@ int misplaced_tile(node& curr_node) {
     return num_misplaced - 1;
 }
 
-int manhattan_distance(node& state) {
-
+int manhattan_distance(node& curr_node) {
+    int total_manhattan = 0;
+    for (int i = 0; i < curr_node.state.size(); ++i) {
+        for (int j = 0; j < curr_node.state.size(); ++j) {
+            if (curr_node.state[i][j]) {
+                total_manhattan += i - ((curr_node.state[i][j] - 1) / curr_node.state.size());
+                total_manhattan += j - ((curr_node.state[i][j] - 1) % curr_node.state.size());
+            }
+        }
+    }
+    return total_manhattan;
 }
 
 void a_star_search(priority_queue<node>& nodes, vector<node>& new_nodes, int heuristic) {
