@@ -52,13 +52,40 @@ vector<node> expand(node& curr_state, priority_queue<node>& nodes, map<string, b
     int column = curr_state.get_blank().column;
     vector<node> new_nodes;
     explored_states[curr_state.to_string()] = true;
-    if (curr_state.get_blank().row != 0) {//up
+    if (curr_state.get_blank().row != 0) {
         node new_state_up(curr_state.state);
         new_state_up.state[row][column] = new_state_up.state[row - 1][column];
         new_state_up.state[row - 1][column] = '0';
         new_state_up.set_blank(row - 1, column);
-        if (explored_states[curr_state.to_string()] = false) {
+        if (explored_states[curr_state.to_string()] == false) {
             new_nodes.push_back(new_state_up);
+        }
+    }
+    if (curr_state.get_blank().row != curr_state.state.size() - 1) {
+        node new_state_down(curr_state.state);
+        new_state_down.state[row][column] = new_state_down.state[row + 1][column];
+        new_state_down.state[row + 1][column] = '0';
+        new_state_down.set_blank(row + 1, column);
+        if (explored_states[curr_state.to_string()] == false) {
+            new_nodes.push_back(new_state_down);
+        }
+    }
+    if (curr_state.get_blank().column != 0) {
+        node new_state_left(curr_state.state);
+        new_state_left.state[row][column] = new_state_left.state[row][column - 1];
+        new_state_left.state[row][column - 1] = '0';
+        new_state_left.set_blank(row, column - 1);
+        if (explored_states[curr_state.to_string()] == false) {
+            new_nodes.push_back(new_state_left);
+        }
+    }
+    if (curr_state.get_blank().column != curr_state.state.size() - 1) {
+        node new_state_right(curr_state.state);
+        new_state_right.state[row][column] = new_state_right.state[row][column + 1];
+        new_state_right.state[row][column + 1] = '0';
+        new_state_right.set_blank(row, column + 1);
+        if (explored_states[curr_state.to_string()] == false) {
+            new_nodes.push_back(new_state_right);
         }
     }
     return new_nodes;
